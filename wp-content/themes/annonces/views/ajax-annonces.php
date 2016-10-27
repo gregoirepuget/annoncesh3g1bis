@@ -1,6 +1,8 @@
 <?php
 $args=array(
     'post_type' => 'annonce',
+    'posts_per_page' => 3,
+    'paged' => $paged,
     'tax_query' => array(
                 array(
                 'taxonomy' => 'categorie-annonce',
@@ -43,4 +45,12 @@ $args=array(
     } else {
     echo 'Pas de résultat';
     }
+    if( $the_query->max_num_pages > $paged )
+    {
+      echo '<a href="#" class="buttonNextAjax" data-page="'.($paged+1).'" data-id="'.$term_id.'">Voir + </a>';
+    }
 ?>
+
+
+
+

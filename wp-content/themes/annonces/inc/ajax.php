@@ -8,6 +8,8 @@ function filter_ajax_category(){
   global $wpdb, $_POST;
   
   $term_id=$_POST["data_id"];
+  $paged=$_POST["data_page"];
+  
   include get_template_directory().'/views/ajax-annonces.php';
   
   die();
