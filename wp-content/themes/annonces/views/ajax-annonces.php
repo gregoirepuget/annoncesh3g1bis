@@ -1,18 +1,19 @@
 <?php
-$args=array(
-    'post_type' => 'annonce',
-    'posts_per_page' => 3,
-    'paged' => $paged,
-    'tax_query' => array(
-                array(
-                'taxonomy' => 'categorie-annonce',
-                'field' => 'term_id',
-                'terms'  => $term_id
-                )
-     )
-    );
 
-  // The Query
+$args=array(
+  'post_type' => 'annonce',
+  'posts_per_page' => 3,
+  'paged' => $paged,
+  'tax_query' => array(
+              array(
+                  'taxonomy' => 'categorie-annonce',
+                  'field'    => 'term_id',
+                  'terms'    => $term_id,
+              ),
+            )
+  );
+// The Query
+//$wp_query->max_num_pages
   $the_query = new WP_Query( $args );
 
   // The Loop
@@ -43,14 +44,11 @@ $args=array(
     /* Restore original Post Data */
     wp_reset_postdata();
     } else {
-    echo 'Pas de résultat';
+        echo 'pas de résultat trouvé';
     }
-    if( $the_query->max_num_pages > $paged )
-    {
-      echo '<a href="#" class="buttonNextAjax" data-page="'.($paged+1).'" data-id="'.$term_id.'">Voir + </a>';
-    }
+
+  if( $the_query->max_num_pages > $paged)
+  {
+    echo '<a href="#" class="button buttonMore" data-id="'.$term_id.'" data-paged="'.($paged+1).'">Voir +</a>';
+  }
 ?>
-
-
-
-

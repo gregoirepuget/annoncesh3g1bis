@@ -21,7 +21,7 @@ wp_register_script('main', get_template_directory_uri() . '/scripts/main.js', ar
 // appel du script dans la page
 wp_enqueue_script('main');
   
-wp_localize_script('main','ajaxurl', admin_url("admin-ajax.php")); 
+wp_localize_script('main', 'ajaxurl', admin_url( 'admin-ajax.php' ) );
   
 
 // enregistrement d'un nouveau style

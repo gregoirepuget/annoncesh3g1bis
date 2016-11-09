@@ -1,5 +1,7 @@
 jQuery(document).ready(function($){
   
+  var rechercheEnCours=false;
+  
   $('section#slider').slick({
     slidesToShow: 1,
     slidesToScroll: 1,
@@ -9,59 +11,84 @@ jQuery(document).ready(function($){
   
   console.log(ajaxurl);
   
-  $(".list-category-annonces a").on('click',function(e){
+  $(".list-category-annonces a").on("click",function(e){
     e.preventDefault();
-    //console.log("ajax");
-    var data_id=$(this).attr("data-id");
-    $(".list-category-annonces a.current").removeClass("current");
-    $(this).addClass("current");
-    //console.log(data_id);
+    var term_id = $(this).attr("data-id");
     var content= $(".annonces");
+    $(".list-category-annonces a").removeClass("current");
+    $(this).addClass("current");
     content.empty().append("Recherche en cours...");
-    $.post(
-      ajaxurl,
-      {
-        'action'  : 'filter-category',
-        'data_id' : data_id,
-        'data_page' : 1
-      },
-      function(response)
-      {
-        content.html(response);
-        
-      }
-    );
-    
-  });
-  
-  
-    $(".annonces").on('click','.buttonNextAjax', function(e){
-      e.preventDefault();
-      var data_id = $(this).attr('data-id');
-      var data_page = $(this).attr('data-page');
-      $(this).html('Recherche en cours...');
-      var content = $(".annonces");
-      $.post(
-          ajaxurl,
+    jQuery.post(
+        ajaxurl,
         {
-        'action'  : 'filter-category',
-        'data_id' : data_id,
-        'data_page' : data_page
+            'action'  : 'filtre-category',
+            'term_id' : term_id,
+            'paged'   : 1
         },
         function(response)
         {
-          $('.buttonNextAjax').remove();
-          content.append(response);
+          content.html(response);
         }
-        
-      );
-    });
+    );
+    
+  });
+
+        $("body").on("click",".buttonMore", function(e){
+          e.preventDefault();
+          var data_id=$(this).attr("data-id");
+          var paged=$(this).attr("data-paged");
+          var content= $(".annonces");
+          $(this).remove();
+          content.append("<span class='ajaxtext'>Recherche en cours</span>");
+          jQuery.post(
+              ajaxurl,
+              {
+                  'action'  : 'filtre-category',
+                  'term_id' : data_id,
+                  'paged'   : paged
+              },
+              function(response)
+              {
+                $('.ajaxtext').remove();
+                content.append(response);
+              }
+          );
+
+        });
   
+  $("#searchAjaxInput").on("keyup",function(e){
+    if(rechercheEnCours==false)
+    {
+        rechercheEnCours=true;
+        var search_input= $("#searchAjaxInput").val();
+        var content_result= $('#searchResult');
+        console.log(search_input);
+        jQuery.post(
+            ajaxurl,
+            {
+              'action' : 'autocompletion',
+              'search_input' : search_input
+            },
+            function(response)
+            {
+             content_result.show();
+             content_result.html(response);
+             rechercheEnCours=false;
+            }
+        );
+    }
+  });
   
-  
+  $("#searchAjaxInput").on("blur",function(e){
+  setTimeout(
+   function(){
+    $('#searchResult').hide();
+     },
+    1000
+  );
+});
   
 });
-
 
 
 
